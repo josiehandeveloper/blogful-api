@@ -19,7 +19,7 @@ app.use(helmet())
 app.use(cors())
 
 
-app.use('/articles', articlesRouter)
+app.use('/api/articles', articlesRouter)
 
 app.get('/xss', (req, res) => {
     res.cookie('secretToken', '1234567890');
