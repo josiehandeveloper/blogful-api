@@ -6,6 +6,15 @@ const ArticlesService = require('./articles-service')
 const articlesRouter = express.Router()
 const jsonParser = express.json()
 
+const serializeArticle = article => ({
+  id: article.id,
+  style: article.style,
+  title: xss(article.title),
+  content: xss(article.content),
+  date_published: article.date_published,
+  author: article.author,
+})
+
 articlesRouter
   .route('/')
   .get((req, res, next) => {
@@ -13,12 +22,12 @@ articlesRouter
       req.app.get('db')
     )
       .then(articles => {
-        res.json(articles)
+        res.json(articles.map(serializeArticle))
       })
       .catch(next)
   })
   .post(jsonParser, (req, res, next) => {
-    const { title, content, style } = req.body
+    const { title, content, style, author } = req.body
     const newArticle = { title, content, style }
 
     for (const [key, value] of Object.entries(newArticle)) {
@@ -28,7 +37,7 @@ articlesRouter
         })
       }
     }
-
+    newArticle.author = author
     ArticlesService.insertArticle(
       req.app.get('db'),
       newArticle
@@ -37,7 +46,7 @@ articlesRouter
         res
           .status(201)
           .location(path.posix.join(req.originalUrl, `/${article.id}`))
-          .json(article)
+          .json(serializeArticle(article))
       })
       .catch(next)
   })
@@ -55,19 +64,13 @@ articlesRouter
             error: { message: `Article doesn't exist` }
           })
         }
-        res.article = article // save the article for the next middleware
-        next() // don't forget to call next so the next middleware happens!
+        res.article = article 
+        next() 
       })
       .catch(next)
   })
   .get((req, res, next) => {
-    res.json({
-      id: res.article.id,
-      style: res.article.style,
-      title: xss(res.article.title), // sanitize title
-      content: xss(res.article.content), // sanitize content
-      date_published: res.article.date_published,
-    })
+    res.json(serializeArticle(res.article))
   })
   .delete((req, res, next) => {
     ArticlesService.deleteArticle(
