@@ -7,6 +7,10 @@
     "test": "mocha --require test/setup.js",
     "dev": "nodemon src/server.js",
     "migrate": "postgrator --config postgrator-config.js",
+<<<<<<< HEAD
+=======
+    "migrate:test": "env NODE_ENV=test npm run migrate", 
+>>>>>>> 90f488b8eea16b81645562352d9ca99360e407a0
     "start": "node src/server.js",
     "predeploy": "npm audit",
     "deploy": "git push heroku main"
@@ -24,7 +28,12 @@
     "helmet": "^4.2.0",
     "knex": "^0.21.12",
     "morgan": "^1.10.0",
+<<<<<<< HEAD
     "pg": "^8.5.1",
+=======
+    "node-modules": "^1.0.1",
+    "pg": "^7.18.2",
+>>>>>>> 90f488b8eea16b81645562352d9ca99360e407a0
     "xss": "^1.0.8"
   },
   "devDependencies": {
@@ -34,4 +43,8 @@
     "postgrator-cli": "^3.2.0",
     "supertest": "^6.0.1"
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 90f488b8eea16b81645562352d9ca99360e407a0
